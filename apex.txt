@@ -1,0 +1,73 @@
+public class my {
+    public static void main() {
+        List<Integer> listOfValues = new List<Integer>{4, 9, 2, 7, 6, 3, 8, 0, 5, 1};
+        Integer n = listOfValues.size();
+        
+        for (Integer i = 0; i < n-1; i++) {
+            for (Integer j = 0; j < n-i-1; j++) {
+                if (listOfValues[j] > listOfValues[j+1]) {
+                    // swap arr[j] and arr[j+1]
+                    Integer temp = listOfValues[j];
+                    listOfValues[j] = listOfValues[j+1];
+                    listOfValues[j+1] = temp;
+                }
+            }
+        }
+        
+        System.debug('Sorted list: ' + listOfValues);
+    }
+}
+
+
+<apex:page controller="CalculatorController">
+    <apex:form>
+        <apex:outputPanel id="calculatorPanel">
+            <apex:inputText value="{!operand1}" />
+            <apex:selectList value="{!operator}" size="1">
+                <apex:selectOptions value="{!operators}" />
+            </apex:selectList>
+            <apex:inputText value="{!operand2}" />
+            <apex:outputText value="=" />
+            <apex:outputText value="{!result}" />
+            <apex:commandButton value="Calculate" action="{!calculate}" rerender="calculatorPanel"/>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>
+
+
+___________________________________________________________________________
+
+public class CalculatorController {
+    public String operand1 { get; set; }
+    public String operand2 { get; set; }
+    public String operator { get; set; }
+    public String result { get; set; }
+    
+    public List<SelectOption> getOperators() {
+        return new List<SelectOption>{
+            new SelectOption('+', '+'),
+            new SelectOption('-', '-'),
+            new SelectOption('', ''),
+            new SelectOption('/', '/')
+        };
+    }
+    
+    public void calculate() {
+        Decimal op1 = Decimal.valueOf(operand1);
+        Decimal op2 = Decimal.valueOf(operand2);
+        
+        if (operator == '+') {
+            result = String.valueOf(op1 + op2);
+        } else if (operator == '-') {
+            result = String.valueOf(op1 - op2);
+        } else if (operator == '*') {
+            result = String.valueOf(op1 * op2);
+        } else if (operator == '/') {
+            if (op2 != 0) {
+                result = String.valueOf(op1 / op2);
+            } else {
+                result = 'Error: Division by zero';
+            }
+        }
+    }
+}
